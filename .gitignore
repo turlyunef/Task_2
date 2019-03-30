@@ -27,6 +27,8 @@ hs_err_pid*
 */.settings
 */target
 */.idea
+*/out
+*/META-INF/Resources
 *.iml
 
 *.classpath
