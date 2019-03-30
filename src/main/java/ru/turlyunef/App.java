@@ -19,7 +19,7 @@ public class App {
 
         arguments.readParameters(args); // reading the entered program parameters
 
-        if (arguments.getCheckParameters()){
+        if (arguments.getCheckParameters()) {
             SortStrategy handler = new MergeSortHandler(arguments);
             handler.makeOutFile(); //sorting all files to Output file
         }

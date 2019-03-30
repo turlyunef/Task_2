@@ -6,15 +6,14 @@ import ru.turlyunef.core.MergeExceptions.MissingParametersException;
 
 import java.io.File;
 
-public class StartParameters implements Parameters{
+public class StartParameters implements Parameters {
+    private static Logger log = LoggerFactory.getLogger(StartParameters.class);
     private boolean fileTypeIsCharacters; //Type of the data for sorting data in the files
     private boolean sortingTypeIsDecrease = false; //The default sorting type is to addition, if user enter decrease, then sortingTypeIsDecrease = true and change algorithm of program
     private String OutFile = null; //Name of the output file
     private String[] InFiles; //Name of the input files
     private int txtFilesCounter = 0; //Counter of the input files in console for checking entering
     private boolean checkParameters = false;
-
-    private static Logger log = LoggerFactory.getLogger(StartParameters.class);
 
     @Override
     public void readParameters(String[] args) {

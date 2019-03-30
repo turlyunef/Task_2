@@ -5,7 +5,7 @@ import ru.turlyunef.core.MergeExceptions.MissingParametersException;
 public interface Parameters {
     void readParameters(String[] args);
 
-    void checkArguments()throws MissingParametersException;
+    void checkArguments() throws MissingParametersException;
 
     void infoArguments();
 

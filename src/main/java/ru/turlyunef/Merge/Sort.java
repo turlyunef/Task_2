@@ -36,7 +36,7 @@ public class Sort {
                 char aChar = a[i].charAt(0);
                 char bChar = b[j].charAt(0);
 
-                if (((int) aChar) >= ((int) bChar) ^  parameters.getSortingTypeIsDecrease()) {
+                if (((int) aChar) >= ((int) bChar) ^ parameters.getSortingTypeIsDecrease()) {
                     result[k] = b[j];
                     j++;
                 } else {
@@ -77,16 +77,17 @@ public class Sort {
     public String[] doSort(String[] array) {
         if (array.length < 2) return array;
         else {
-            int rightA = (int) array.length / 2 - 1; //right border of the first subarray "A"
+            int rightA = array.length / 2 - 1; //right border of the first subarray "A"
             int leftB = rightA + 1; //left border of the second subarray "B"
-            String A[] = new String[rightA + 1];
-            String B[] = new String[array.length - A.length];
+            String[] A = new String[rightA + 1];
+            String[] B = new String[array.length - A.length];
             A = Arrays.copyOfRange(array, 0, rightA + 1);
             B = Arrays.copyOfRange(array, rightA + 1, array.length);
 
             return doMerge(doSort(A), doSort(B));
         }
     }
+
     public void mergeTwoFilesToOutFile(String fileName1, String fileName2, String OutFileName) {
 
         try (FileInputStream fstream1 = new FileInputStream(fileName1);
