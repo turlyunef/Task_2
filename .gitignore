@@ -24,12 +24,13 @@ hs_err_pid*
 
 
 #My gitignore
-*/.settings
-*/target
-*/.idea
-*/out
-*/META-INF/Resources
+/.settings
+/target
+/.idea/
+/out/
+/META-INF/Resources
 *.iml
+/src/main/java/META-INF/
 
 *.classpath
 *.project

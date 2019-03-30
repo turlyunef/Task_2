@@ -66,13 +66,17 @@ public class Handler {
     }
 
     public static void deleteSortedInputFiles(String[] fileNames) {
-        for (String x : fileNames
-        ) {
-            File file = new File("Sorted_" + x);
-            if (file.delete()) {
-                log.debug("Sorted_" + x + " has been deleted");
-            } else
-                log.debug("Sorted_" + x + " has NOT been deleted");
+        try {
+            for (String x : fileNames
+            ) {
+                File file = new File("Sorted_" + x);
+                if (file.delete()) {
+                    log.debug("Sorted_" + x + " has been deleted");
+                } else
+                    log.debug("Sorted_" + x + " has NOT been deleted");
+            }
+        }catch (NullPointerException e){
+            log.debug("Sorted input files do not exist");
         }
     }
 }
