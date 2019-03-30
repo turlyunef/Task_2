@@ -14,9 +14,24 @@ public class MergeSortHandler implements SortStrategy {
     Sort mergeSorter = new Sort();
     Parameters parameters;
 
-    public MergeSortHandler(Parameters parameters){
+    public MergeSortHandler(Parameters parameters) {
         this.parameters = parameters;
         mergeSorter.parameters = parameters;
+    }
+
+    public static void deleteSortedInputFiles(String[] fileNames) {
+        try {
+            for (String x : fileNames
+            ) {
+                File file = new File("Sorted_" + x);
+                if (file.delete()) {
+                    log.debug("Sorted_" + x + " has been deleted");
+                } else
+                    log.debug("Sorted_" + x + " has NOT been deleted");
+            }
+        } catch (NullPointerException e) {
+            log.debug("Sorted input files do not exist");
+        }
     }
 
     public String sortFile(String fileName) {
@@ -38,11 +53,10 @@ public class MergeSortHandler implements SortStrategy {
         return tempSortedFilesNames;
     }
 
-    public void makeOutFile(){
+    public void makeOutFile() {
         mergeAllFiles(sortFiles(parameters.getInFiles()), parameters.getOutFile());
         deleteSortedInputFiles(parameters.getInFiles()); //Delete temp sorted files
     }
-
 
     public void mergeAllFiles(String[] inputFileNames, String outputFileNames) {
         if (inputFileNames.length == 1) {
@@ -53,11 +67,11 @@ public class MergeSortHandler implements SortStrategy {
             log.info("sorting was successful!");
             return;
         } else {
-            int mergeCounter = (int) inputFileNames.length / 2 + (inputFileNames.length % 2);
+            int mergeCounter = inputFileNames.length / 2 + (inputFileNames.length % 2);
             log.debug("mergeCounter = " + mergeCounter);
             String[] tempOutFileNames = new String[mergeCounter];
             int j = 0;
-            for (int i = 0; i < (int) inputFileNames.length / 2; i++, j += 2) {
+            for (int i = 0; i < inputFileNames.length / 2; i++, j += 2) {
                 log.debug("i=" + i + " j=" + j);
                 tempOutFileNames[i] = "tempFile" + mergeCounter + "" + i + ".txt";
                 log.debug("mergeTwoFilesToOutFile(" + inputFileNames[j] + " " + inputFileNames[j + 1] + " to " + tempOutFileNames[i]);
@@ -78,21 +92,6 @@ public class MergeSortHandler implements SortStrategy {
                 } else
                     log.debug(x + " has NOT been deleted");
             }
-        }
-    }
-
-    public static void deleteSortedInputFiles(String[] fileNames) {
-        try {
-            for (String x : fileNames
-            ) {
-                File file = new File("Sorted_" + x);
-                if (file.delete()) {
-                    log.debug("Sorted_" + x + " has been deleted");
-                } else
-                    log.debug("Sorted_" + x + " has NOT been deleted");
-            }
-        }catch (NullPointerException e){
-            log.debug("Sorted input files do not exist");
         }
     }
 
