@@ -6,7 +6,7 @@ import ru.turlyunef.core.MergeExceptions.MissingParametersException;
 
 import java.io.File;
 
-public class StartParameters {
+public class StartParameters implements Parameters{
     private boolean fileTypeIsCharacters; //Type of the data for sorting data in the files
     private boolean sortingTypeIsDecrease = false; //The default sorting type is to addition, if user enter decrease, then sortingTypeIsDecrease = true and change algorithm of program
     private String OutFile = null; //Name of the output file
@@ -16,6 +16,7 @@ public class StartParameters {
 
     private static Logger log = LoggerFactory.getLogger(StartParameters.class);
 
+    @Override
     public void readParameters(String[] args) {
         try {
             checkTxtFileNamesCounter(args);
@@ -67,7 +68,8 @@ public class StartParameters {
     }
 
 
-    private void checkArguments() throws MissingParametersException {
+    @Override
+    public void checkArguments() throws MissingParametersException {
         if (OutFile == null) {
             log.error("Output file name is missed");
             throw new MissingParametersException();
@@ -84,6 +86,7 @@ public class StartParameters {
 
     }
 
+    @Override
     public void infoArguments() {
         log.debug("fileTypeIsCharacters = " + getFileTypeIsCharacters());
         log.debug("SortingTypeIsDecrease = " + getSortingTypeIsDecrease());
@@ -97,22 +100,27 @@ public class StartParameters {
         }
     }
 
+    @Override
     public boolean getFileTypeIsCharacters() {
         return fileTypeIsCharacters;
     }
 
+    @Override
     public boolean getSortingTypeIsDecrease() {
         return sortingTypeIsDecrease;
     }
 
+    @Override
     public String getOutFile() {
         return OutFile;
     }
 
+    @Override
     public String[] getInFiles() {
         return InFiles;
     }
 
+    @Override
     public boolean getCheckParameters() {
         return checkParameters;
     }
