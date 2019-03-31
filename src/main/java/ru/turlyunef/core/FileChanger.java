@@ -7,8 +7,8 @@ import org.slf4j.LoggerFactory;
 import java.io.*;
 import java.util.ArrayList;
 
-public class FileReaderWriter {
-    private static Logger log = LoggerFactory.getLogger(FileReaderWriter.class);
+public class FileChanger {
+    private static Logger log = LoggerFactory.getLogger(FileChanger.class);
 
     public static void writeArrayToFile(String[] array, String fileName) {
         try (FileWriter writer = new FileWriter(fileName, false)) {
@@ -17,27 +17,29 @@ public class FileReaderWriter {
                 writer.append(x);
                 writer.append("\r\n");
                 writer.flush();
-
             }
         } catch (IOException ex) {
             log.error(ex.getMessage());
         }
     }
 
-
     public static ArrayList<String> convertFileToArrayList(String fileName) {
-        ArrayList<String> listFromFile = new ArrayList<String>();
+        ArrayList<String> listFromFile = new ArrayList<>();
         try (FileInputStream fstream = new FileInputStream(fileName);
              BufferedReader br = new BufferedReader(new InputStreamReader(fstream))) {
             String strLine;
             while (true) {
                 strLine = br.readLine();
-                if (strLine != null) listFromFile.add(strLine);
-                else break;
+                if (strLine != null) {
+                    listFromFile.add(strLine);
+                } else {
+                    break;
+                }
             }
         } catch (IOException e) {
             log.error("File read error");
         }
+
         return listFromFile;
     }
 
@@ -50,6 +52,4 @@ public class FileReaderWriter {
             log.error(ex.getMessage());
         }
     }
-
-
 }

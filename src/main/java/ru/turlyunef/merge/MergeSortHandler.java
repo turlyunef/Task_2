@@ -1,8 +1,8 @@
-package ru.turlyunef.Merge;
+package ru.turlyunef.merge;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.turlyunef.core.FileReaderWriter;
+import ru.turlyunef.core.FileChanger;
 import ru.turlyunef.core.Parameters;
 import ru.turlyunef.core.SortStrategy;
 
@@ -12,14 +12,14 @@ import java.util.ArrayList;
 public class MergeSortHandler implements SortStrategy {
     private static Logger log = LoggerFactory.getLogger(MergeSortHandler.class);
     Sort mergeSorter = new Sort();
-    Parameters parameters;
+    private Parameters parameters;
 
     public MergeSortHandler(Parameters parameters) {
         this.parameters = parameters;
-        mergeSorter.parameters = parameters;
+        mergeSorter.setParameters(parameters);
     }
 
-    public static void deleteSortedInputFiles(String[] fileNames) {
+    public static void deleteTempSortedInputFiles(String[] fileNames) {
         try {
             for (String x : fileNames
             ) {
@@ -35,27 +35,26 @@ public class MergeSortHandler implements SortStrategy {
     }
 
     public String sortFile(String fileName) {
-        ArrayList<String> list = new ArrayList<String>();
-        list = FileReaderWriter.convertFileToArrayList(fileName);
+        ArrayList<String> list = FileChanger.convertFileToArrayList(fileName);
         String[] array = list.toArray(new String[list.size()]);
         String tempSortedFileName = "Sorted_" + fileName;
-        FileReaderWriter.writeArrayToFile(mergeSorter.doSort(array), tempSortedFileName);
-        return tempSortedFileName;
+        FileChanger.writeArrayToFile(mergeSorter.doSort(array), tempSortedFileName);
 
+        return tempSortedFileName;
     }
 
     public String[] sortFiles(String[] fileNames) {
         String[] tempSortedFilesNames = new String[fileNames.length];
         for (int i = 0; i < fileNames.length; i++) {
             tempSortedFilesNames[i] = sortFile(fileNames[i]);
-            log.debug("file " + fileNames[i] + " has been sorted");
+            log.debug("File " + fileNames[i] + " has been sorted");
         }
         return tempSortedFilesNames;
     }
 
     public void makeOutFile() {
-        mergeAllFiles(sortFiles(parameters.getInFiles()), parameters.getOutFile());
-        deleteSortedInputFiles(parameters.getInFiles()); //Delete temp sorted files
+        mergeAllFiles(sortFiles(parameters.getInputFileNames()), parameters.getOutputFileName());
+        deleteTempSortedInputFiles(parameters.getInputFileNames());
     }
 
     public void mergeAllFiles(String[] inputFileNames, String outputFileNames) {
@@ -63,23 +62,23 @@ public class MergeSortHandler implements SortStrategy {
             File file = new File(inputFileNames[0]);
             File file2 = new File(outputFileNames);
             file.renameTo(file2);
-            log.debug("file " + inputFileNames[0] + " has been renamed to " + outputFileNames);
-            log.info("sorting was successful!");
+            log.debug("File " + inputFileNames[0] + " has been renamed to " + outputFileNames);
+            log.info("Sorting was successful!");
             return;
         } else {
             int mergeCounter = inputFileNames.length / 2 + (inputFileNames.length % 2);
-            log.debug("mergeCounter = " + mergeCounter);
+            log.debug("MergeCounter = " + mergeCounter);
             String[] tempOutFileNames = new String[mergeCounter];
             int j = 0;
             for (int i = 0; i < inputFileNames.length / 2; i++, j += 2) {
                 log.debug("i=" + i + " j=" + j);
                 tempOutFileNames[i] = "tempFile" + mergeCounter + "" + i + ".txt";
-                log.debug("mergeTwoFilesToOutFile(" + inputFileNames[j] + " " + inputFileNames[j + 1] + " to " + tempOutFileNames[i]);
+                log.debug("MergeTwoFilesToOutFile(" + inputFileNames[j] + " " + inputFileNames[j + 1] + " to " + tempOutFileNames[i]);
                 mergeSorter.mergeTwoFilesToOutFile(inputFileNames[j], inputFileNames[j + 1], tempOutFileNames[i]);
             }
             if ((inputFileNames.length % 2) == 1) {
                 tempOutFileNames[mergeCounter - 1] = inputFileNames[inputFileNames.length - 1];
-                log.debug("(inputFileNames.length % 2) == 1");
+                log.debug("(InputFileNames.length % 2) == 1");
             }
             mergeAllFiles(tempOutFileNames, outputFileNames);
 
@@ -94,6 +93,4 @@ public class MergeSortHandler implements SortStrategy {
             }
         }
     }
-
-
 }
