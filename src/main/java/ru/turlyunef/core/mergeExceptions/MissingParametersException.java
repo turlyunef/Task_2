@@ -1,4 +1,4 @@
-package ru.turlyunef.core.MergeExceptions;
+package ru.turlyunef.core.mergeExceptions;
 
 public class MissingParametersException extends Exception {
 }

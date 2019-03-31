@@ -2,23 +2,22 @@ package ru.turlyunef.core;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.turlyunef.core.MergeExceptions.MissingParametersException;
+import ru.turlyunef.core.mergeExceptions.MissingParametersException;
 
 import java.io.File;
 
 public class StartParameters implements Parameters {
     private static Logger log = LoggerFactory.getLogger(StartParameters.class);
-    private boolean fileTypeIsCharacters; //Type of the data for sorting data in the files
-    private boolean sortingTypeIsDecrease = false; //The default sorting type is to addition, if user enter decrease, then sortingTypeIsDecrease = true and change algorithm of program
-    private String OutFile = null; //Name of the output file
-    private String[] InFiles; //Name of the input files
-    private int txtFilesCounter = 0; //Counter of the input files in console for checking entering
+    private boolean fileTypeIsCharacters;
+    private boolean sortingTypeIsDecrease = false; //The default sorting type is to addition
+    private String OutputFileName = null;
+    private String[] InputFileNames;
+    private int txtAllFilesCounter = 0;
     private boolean checkParameters = false;
 
-    @Override
     public void readParameters(String[] args) {
         try {
-            checkTxtFileNamesCounter(args);
+            checkTxtAllFileNamesCounter(args);
             int j = 0;
             for (String x : args) {
                 if (x.equals("-i")) {
@@ -38,10 +37,10 @@ public class StartParameters implements Parameters {
                     log.debug("Sorting type assigned to decrease");
                 }
                 if (x.lastIndexOf(".txt") != -1) {
-                    if (OutFile == null) {
-                        OutFile = x;
+                    if (OutputFileName == null) {
+                        OutputFileName = x;
                     } else {
-                        InFiles[j] = x;
+                        InputFileNames[j] = x;
                         j++;
                     }
                 }
@@ -54,48 +53,47 @@ public class StartParameters implements Parameters {
         }
     }
 
-    private void checkTxtFileNamesCounter(String[] args) throws MissingParametersException {
+    private void checkTxtAllFileNamesCounter(String[] args) throws MissingParametersException {
         for (String x : args) {
-            if (x.lastIndexOf(".txt") != -1) txtFilesCounter++;
+            if (x.lastIndexOf(".txt") != -1) {
+                txtAllFilesCounter++;
+            }
         }
-        if (txtFilesCounter < 2) {
+        if (txtAllFilesCounter < 2) {
             log.error("File names is missed");
             throw new MissingParametersException();
         } else {
-            InFiles = new String[txtFilesCounter - 1];
+            InputFileNames = new String[txtAllFilesCounter - 1];
         }
     }
 
 
-    @Override
     public void checkArguments() throws MissingParametersException {
-        if (OutFile == null) {
+        if (OutputFileName == null) {
             log.error("Output file name is missed");
             throw new MissingParametersException();
         }
-
-        if (InFiles.length < 1) {
+        if (InputFileNames.length < 1) {
             log.error("Input files name is missed");
             throw new MissingParametersException();
         } else {
             setCheckParameters(true);
-            File file = new File(getOutFile());
-            if (file.delete()) ;
+            File file = new File(getOutputFileName());
+            file.delete();
         }
-
     }
 
-    @Override
     public void infoArguments() {
         log.debug("fileTypeIsCharacters = " + getFileTypeIsCharacters());
         log.debug("SortingTypeIsDecrease = " + getSortingTypeIsDecrease());
-        log.debug("Output file name = " + getOutFile());
+        log.debug("Output file name = " + getOutputFileName());
         try {
-            for (String y : getInFiles()
+            for (String y : getInputFileNames()
             ) {
-                log.debug("input file name = " + y);
+                log.debug("Input file name = " + y);
             }
         } catch (NullPointerException e) {
+            log.debug("Input file name is not exist");
         }
     }
 
@@ -110,13 +108,13 @@ public class StartParameters implements Parameters {
     }
 
     @Override
-    public String getOutFile() {
-        return OutFile;
+    public String getOutputFileName() {
+        return OutputFileName;
     }
 
     @Override
-    public String[] getInFiles() {
-        return InFiles;
+    public String[] getInputFileNames() {
+        return InputFileNames;
     }
 
     @Override
